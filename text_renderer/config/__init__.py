@@ -222,7 +222,8 @@ def import_module_from_file(full_path_to_module):
         module_name, module_ext = os.path.splitext(module_file)
 
         # Get module "spec" from filename
-        spec = importlib.util.spec_from_file_location(module_name, full_path_to_module)
+        spec = importlib.util.spec_from_file_location(
+            module_name, full_path_to_module)
 
         module = spec.loader.load_module()
 

@@ -1,4 +1,0 @@
-python
-pytorch
-深度学习
-tensorflow
