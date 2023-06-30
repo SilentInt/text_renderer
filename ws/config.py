@@ -16,7 +16,7 @@ CURRENT_DIR = Path(os.path.abspath(os.path.dirname(__file__)))
 
 def story_data():
     return GeneratorCfg(
-        num_image=3000,
+        num_image=10,
         save_dir=CURRENT_DIR / "output",
         render_cfg=RenderCfg(
             bg_dir=CURRENT_DIR / "bg",

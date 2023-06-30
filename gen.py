@@ -24,6 +24,7 @@ def convert_to_yolo():
         parsed_size = data["sizes"]
 
     for img_name, labels in parsed_data.items():
+        labels = (int(labels)+9) % 10
         input_img = input_dir+"images/"+img_name+'.jpg'
         # Open image directory
         img = cv2.imread(input_img)
