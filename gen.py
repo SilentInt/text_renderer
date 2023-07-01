@@ -15,7 +15,6 @@ os.makedirs(edges_dir, exist_ok=True)
 
 
 def convert_to_yolo():
-
     parsed_data = None
     parsed_size = None
     with open(input_dir+"labels.json", "r", encoding='utf-8') as file:
@@ -24,7 +23,6 @@ def convert_to_yolo():
         parsed_size = data["sizes"]
 
     for img_name, labels in parsed_data.items():
-        labels = (int(labels)+9) % 10
         input_img = input_dir+"images/"+img_name+'.jpg'
         # Open image directory
         img = cv2.imread(input_img)
@@ -42,7 +40,7 @@ def convert_to_yolo():
         #     img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 5, 2)
 
         # 使用边缘检测函数查找数字的边缘
-        edges = cv2.Canny(img, 100, 200)
+        edges = cv2.Canny(img, 50, 200)
 
         # 进行闭运算操作
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
