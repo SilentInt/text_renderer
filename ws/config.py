@@ -17,7 +17,7 @@ CURRENT_DIR = Path(os.path.abspath(os.path.dirname(__file__)))
 
 def story_data():
     return GeneratorCfg(
-        num_image=10,
+        num_image=2000,
         save_dir=CURRENT_DIR / "output",
         render_cfg=RenderCfg(
             bg_dir=CURRENT_DIR / "bg",
@@ -39,7 +39,7 @@ def story_data():
                 Padding(p=1, w_ratio=[2, 2],
                         h_ratio=[1, 1], center=False),
                 Line(0.9, thickness=(1, 5)),
-                DropoutRand(p=1, dropout_p=(0.3, 0.7)),
+                DropoutRand(p=1, dropout_p=(0.0, 0.4)),
             ]),
         ),
     )

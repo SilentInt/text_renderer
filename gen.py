@@ -29,28 +29,31 @@ def pre_process(image):
     mask = cv2.inRange(hsv, lower_black, upper_black)
 
     # 对掩膜进行闭运算
-    mask = cv2.morphologyEx(
-        mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+    # mask = cv2.morphologyEx(
+    #    mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
 
+    # 对掩模进行膨胀操作
+    mask = cv2.dilate(mask, np.ones((5, 5), np.uint8), iterations=1)
     # 进行边缘检测掩模
-    edges = cv2.Canny(image, 100, 200)
+    # edges = cv2.Canny(image, 100, 200)
 
     # 定义结构元素（闭运算核）
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
     # 闭运算
-    closed = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
+    # closed = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
 
     # 寻找闭合区域
-    contours, hierarchy = cv2.findContours(
-        closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # contours, hierarchy = cv2.findContours(
+    #    closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # 填充闭合区域
-    filled = np.zeros_like(mask)
-    cv2.drawContours(filled, contours, -1, 255, thickness=cv2.FILLED)
+    # filled = np.zeros_like(mask)
+    # cv2.drawContours(filled, contours, -1, 255, thickness=cv2.FILLED)
 
     # 结合两个掩模
-    result = cv2.bitwise_and(mask, mask, mask=filled)
-    return result
+    # result = cv2.bitwise_and(mask, mask, mask=filled)
+    # return result
+    return mask
 
 
 def convert_to_yolo():
@@ -73,7 +76,7 @@ def convert_to_yolo():
         img = pre_process(img)
 
         # 使用边缘检测函数查找数字的边缘
-        edges = cv2.Canny(img, 50, 200)
+        edges = cv2.Canny(img, 30, 200)
 
         # 进行闭运算操作
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
@@ -108,7 +111,8 @@ def convert_to_yolo():
         label = f"{labels} {center_x_norm} {center_y_norm} {width_norm} {height_norm}"
 
         # 保存图片
-        shutil.copy(input_img, output_dir)
+        cv2.imwrite(f"{output_dir}{img_name}.jpg", img)
+        # shutil.copy(f"{edges_dir}{img_name}.jpg", output_dir)
 
         # 保存标签到txt文件
         with open(f"{label_dir}{img_name}.txt", "w") as file:
