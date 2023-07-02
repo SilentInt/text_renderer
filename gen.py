@@ -2,6 +2,7 @@ import cv2
 import random
 import os
 import shutil
+import numpy as np
 
 input_dir = "./ws/output/"
 output_dir = "./dataset_sp/images/"  # 图片输出目录
@@ -12,6 +13,44 @@ edges_dir = "./dataset_sp/edges/"  # 边缘输出目录
 os.makedirs(output_dir, exist_ok=True)
 os.makedirs(label_dir, exist_ok=True)
 os.makedirs(edges_dir, exist_ok=True)
+
+
+def pre_process(image):
+
+    # 将图片转换为HSV颜色空间
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # 定义黑色的阈值范围
+    lower_black = np.array([0, 0, 0])
+    # upper_black = np.array([180, 255, 50])
+    upper_black = np.array([180, 255, 60])
+
+    # 根据阈值创建掩膜
+    mask = cv2.inRange(hsv, lower_black, upper_black)
+
+    # 对掩膜进行闭运算
+    mask = cv2.morphologyEx(
+        mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+
+    # 进行边缘检测掩模
+    edges = cv2.Canny(image, 100, 200)
+
+    # 定义结构元素（闭运算核）
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+    # 闭运算
+    closed = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
+
+    # 寻找闭合区域
+    contours, hierarchy = cv2.findContours(
+        closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # 填充闭合区域
+    filled = np.zeros_like(mask)
+    cv2.drawContours(filled, contours, -1, 255, thickness=cv2.FILLED)
+
+    # 结合两个掩模
+    result = cv2.bitwise_and(mask, mask, mask=filled)
+    return result
 
 
 def convert_to_yolo():
@@ -30,14 +69,8 @@ def convert_to_yolo():
         # 获取图片尺寸
         image_size = parsed_size[img_name]
 
-        # image to gray
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-        # _, img = cv2.threshold(
-        #     img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        # auto threshold
-        # img = cv2.adaptiveThreshold(
-        #     img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 5, 2)
+        # 黑白边缘掩模处理
+        img = pre_process(img)
 
         # 使用边缘检测函数查找数字的边缘
         edges = cv2.Canny(img, 50, 200)

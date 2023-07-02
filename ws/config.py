@@ -8,6 +8,7 @@ from text_renderer.config import (
     NormPerspectiveTransformCfg,
     GeneratorCfg,
     FixedTextColorCfg,
+    FixedPerspectiveTransformCfg,
     # SimpleTextColorCfg,
 )
 
@@ -20,27 +21,30 @@ def story_data():
         save_dir=CURRENT_DIR / "output",
         render_cfg=RenderCfg(
             bg_dir=CURRENT_DIR / "bg",
-            height=600,
+            height=200,
             gray=False,
             text_color_cfg=FixedTextColorCfg(),
-            perspective_transform=NormPerspectiveTransformCfg(20, 20, 1.5),
+            perspective_transform=NormPerspectiveTransformCfg(60, 60, 20),
+            # perspective_transform=FixedPerspectiveTransformCfg(30, 30, 1.5),
             corpus=WordCorpus(
                 WordCorpusCfg(
                     text_paths=[CURRENT_DIR / "corpus" / "text.txt"],
                     font_dir=CURRENT_DIR / "font",
                     font_size=(100, 210),
                     num_word=(1, 1),
+                    text_color_cfg=FixedTextColorCfg(),
                 ),
             ),
             corpus_effects=Effects([
-                Padding(p=1, w_ratio=[8, 8],
-                        h_ratio=[4, 4], center=False),
-                # Line(0.9, thickness=(2, 5)),
-                # DropoutRand(p=1, dropout_p=(0.0, 0.2)),
+                Padding(p=1, w_ratio=[2, 2],
+                        h_ratio=[1, 1], center=False),
+                Line(0.9, thickness=(1, 5)),
+                DropoutRand(p=1, dropout_p=(0.3, 0.7)),
             ]),
-            # text_color_cfg=SimpleTextColorCfg(),
         ),
     )
 
 
-configs = [story_data()]
+configs = [
+    story_data()
+]
