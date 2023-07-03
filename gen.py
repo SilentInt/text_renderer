@@ -33,7 +33,7 @@ def pre_process(image):
     #    mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
 
     # 对掩模进行膨胀操作
-    mask = cv2.dilate(mask, np.ones((5, 5), np.uint8), iterations=1)
+    mask = cv2.dilate(mask, np.ones((5, 5), np.uint8), iterations=5)
     # 进行边缘检测掩模
     # edges = cv2.Canny(image, 100, 200)
 
