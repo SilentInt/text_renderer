@@ -17,7 +17,7 @@ CURRENT_DIR = Path(os.path.abspath(os.path.dirname(__file__)))
 
 def story_data():
     return GeneratorCfg(
-        num_image=3000,
+        num_image=30000,
         save_dir=CURRENT_DIR / "output",
         render_cfg=RenderCfg(
             bg_dir=CURRENT_DIR / "bg",
@@ -30,16 +30,16 @@ def story_data():
                 WordCorpusCfg(
                     text_paths=[CURRENT_DIR / "corpus" / "text.txt"],
                     font_dir=CURRENT_DIR / "font",
-                    font_size=(20, 30),
+                    font_size=(20, 40),
                     num_word=(1, 1),
                     text_color_cfg=FixedTextColorCfg(),
                 ),
             ),
             corpus_effects=Effects([
-                Padding(p=1, w_ratio=[2, 2],
-                        h_ratio=[1, 1], center=True),
+                # Padding(p=0.5, w_ratio=[0, 2],
+                #         h_ratio=[0, 0.3], center=True),
                 # Line(0.5, thickness=(1, 1)),
-                DropoutRand(p=1, dropout_p=(0.0, 0.4)),
+                DropoutRand(p=0.9, dropout_p=(0.0, 0.7)),
             ]),
         ),
     )
